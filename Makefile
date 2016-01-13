@@ -127,6 +127,27 @@ data_process:
 	$(PSQL) -f data/scripts/blockgroups_boundaries.sql | topojson -q 1e4 -p -o web/htdocs/data/boston_blockgroups_boundaries.json
 	$(PSQL) -f data/scripts/counties.sql | topojson -q 1e4 -p -o web/htdocs/data/ma_counties.json
 	$(PSQL) -f data/scripts/incidents.sql > web/htdocs/data/incidents.csv
+
+## Big dogs. ##
 data: data_real_init data_init data_insert data_process
+data_deal_with: data_insert data_process
 update: repo_update bower_update links
 install: bower_init update 
+
+set_variables: 
+	export PGBIN=/usr/local/bin/
+	export PGPORT=5432
+	export PGHOST=localhost
+	export PGUSER=paw
+	export PGPASSWORD=""
+	export PGDATABASE=aclum
+	export TMPDIR=/tmp/
+	WGET = `wget`
+	GIT = `git`
+	BOWER = ./bowerphp
+	BOWER_URL = http://bowerphp.org/bowerphp.phar
+	ABSP = $(shell dirname .) 
+	WEB_DIR = web
+	HTDOCS_DIR = `htdocs`
+	DOCUMENT_ROOT = $(WEB_DIR)/$(HTDOCS_DIR)
+	PSQL=`$(PGBIN)psql -t`
